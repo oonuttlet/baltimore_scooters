@@ -14,7 +14,7 @@ balt_b <- mapbaltimore::baltimore_city_detailed %>%#load in baltimore shape from
   st_make_valid()
   
 baltimore_urls <- list('https://gbfs.spin.pm/api/gbfs/v2/baltimore/free_bike_status',
-                       'https://mds.bird.co/gbfs/v2/public/baltimore/free_bike_status.json',
+                       # 'https://mds.bird.co/gbfs/v2/public/baltimore/free_bike_status.json',
                        'https://mds.linkyour.city/gbfs/2.2/us_md_baltimore/free_bike_status.json')
 
 fbs_raw <- lapply(baltimore_urls, function(x) content(GET(x)))
