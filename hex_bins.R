@@ -27,9 +27,15 @@ fbs_gdf <- st_as_sf(fbs_bikes_bind, coords = c('lon', 'lat'), crs = 4326) %>%
   st_transform(32618)
 plot(st_geometry(fbs_gdf)) #check for distribution
 
-hex <- st_as_sf(st_make_grid(x = balt_b, cellsize = 200, what = 'polygons', square = FALSE))
+hex <- st_as_sf(st_make_grid(x = balt_b, cellsize = 400, what = 'polygons', square = FALSE))
 hex.intersects <- st_intersects(st_union(balt_b), hex)
-hex.subset <- hex[hex.intersects[[1]],]
+hex.subset <- hex[hex.intersects[[1]],] %>%
+  mutate(hex_id = row_number())
 
+sph <- st_join(fbs_gdf, hex.subset) %>%
+  count(hex_id) %>% st_drop_geometry()
+hex_out <- left_join(hex.subset, sph, by = "hex_id") %>%
+  replace(is.na(.), 0)
 
-
+tm_shape(hex_out)+
+  tm_polygons(col = 'n')
